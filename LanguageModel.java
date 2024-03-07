@@ -44,10 +44,10 @@ public class LanguageModel {
         while (!in.isEmpty()){
             chr= in.readChar();
 
-            List probabilities = CharDataMap.get(window);
-            if (probabilities == null) {
-                probabilities = new List();
-                CharDataMap.put(window, probabilities);
+            List probs = CharDataMap.get(window);
+            if (probs == null) {
+                probs = new List();
+                CharDataMap.put(window, probs);
             }
             probabilities.update(chr);
             window = window + chr;
@@ -60,20 +60,20 @@ public class LanguageModel {
 
     // Computes and sets the probabilities (p and cp fields) of all the
     // characters in the given list. */
-    public void calculateProbabilities(List probabilities) {                
+    public void calculateProbs(List probs) {                
         // Your code goes here
         int charTotal = 0;
-        for(int j = 0; j < probabilities.getSize(); j++) {
-           charData current = probabilities.get(j);
+        for(int j = 0; j < probs.getSize(); j++) {
+           CharData current = probs.get(j);
            charTotal += current.count;
         }
 
-        double totalProbabilities = 0;
-        for(int j = 0; j < probabilities.getSize(); j++) {
-           charData current = probabilities.get(j);
+        double totalProbs = 0;
+        for(int j = 0; j < probs.getSize(); j++) {
+           CharData current = probs.get(j);
            current.p += (double) current.count / charTotal;
-           totalProbabilities += current.p;
-           current.cp = totalProbabilities;
+           totalProbs += current.p;
+           current.cp = totalProbs;
         }
 
     }
@@ -82,14 +82,14 @@ public class LanguageModel {
     public char getRandomChar(List probabilities) {
         // Your code goes here
     double r = randomGenerator.nextDouble();
-    ListIterator iterator = probabilities.ListIterator(0);
+    ListIterator iterator = probs.ListIterator(0);
     while (iterator.hasNext()) {
          CharData current = iterator.next();
          if (r <=current.cp) {
             return current.char;
          }
     }
-    return probabilities.get(probabilities.getSize()- 1).char;
+    return probs.get(probs.getSize()- 1).char;
 
     }
 
@@ -105,15 +105,15 @@ public class LanguageModel {
         if (initialText.length() < windowLength){
             return initialText;
         }
-        String windows = initialText.substring(initialText.length() - windowLength);
+        String window = initialText.substring(initialText.length() - windowLength);
         StringBuilder genText = new StringBuilder(window);
         for (int j = 0; j < textLength; j++) {
-            List probabilities = CharDataMap.get(window);
-            if(probabilities = null){
+            List probs = CharDataMap.get(window);
+            if(probs = null){
                return genText.toString();
             }
             else {   
-                char chr = getRandomChar(probabilities);
+                char chr = getRandomChar(probs);
                 genText.append(chr);
                 window = genText.substring(genText.length() - windowLength);
 
@@ -126,8 +126,8 @@ public class LanguageModel {
     public String toString() {
         StringBuilder str = new StringBuilder();
         for (String key : CharDataMap.keySet()) {
-            List keyProbabilities = CharDataMap.get(key);
-            str.append(key + " : " + keyProbabilities + "\n");
+            List keyProbs = CharDataMap.get(key);
+            str.append(key + " : " + keyProbs + "\n");
         }
         return str.toString();
     }
