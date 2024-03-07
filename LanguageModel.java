@@ -106,19 +106,20 @@ public class LanguageModel {
             return initialText;
         }
         String windows = initialText.substring(initialText.length() - windowsLength);
-        String genText = windows;
+        StringBuilder genText = new StringBuilder(windows);
         for (int j = 0; j < textLength; j++) {
             List probabilities = CharDataMap.get(windows);
-            if(probabilities != null){
-                char newChar = getRandomChar(probabilities);
-                genText = genText + newChr;
-                windows = genText.substring(genText.length() - windowsLength);
+            if(probabilities = null){
+               return genText.toString();
             }
-            else {
-                return genText;
+            else {   
+                char c = getRandomChar(probabilities);
+                genText.append(c);
+                window = genText.substring(genText.length() - windowsLength);
+
             }
         }
-        return genText;
+        return genText.toString();
     }
 
     /** Returns a string representing the map of this language model. */
@@ -126,15 +127,7 @@ public class LanguageModel {
         StringBuilder str = new StringBuilder();
         for (String key : CharDataMap.keySet()) {
             List keyProbabilities = CharDataMap.get(key);
-
-    }
-
-    /** Returns a string representing the map of this language model. */
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        for (String key : CharDataMap.keySet()) {
-            List keyProbabilities = CharDataMap.get(key);
-    str.append(key + " : " + keyProbabilities + "\n");
+            str.append(key + " : " + keyProbabilities + "\n");
         }
         return str.toString();
     }
