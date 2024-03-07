@@ -25,7 +25,7 @@ public class LanguageModel {
     /** Constructs a language model with the given window length.
      * Generating texts from this model multiple times will produce
      * different random texts. Good for production. */
-    public LanguageModel(int windowLength) {
+public LanguageModel(int windowLength) {
         this.windowLength = windowLength;
         randomGenerator = new Random();
         CharDataMap = new HashMap<String, List>();
@@ -33,106 +33,102 @@ public class LanguageModel {
 
     /** Builds a language model from the text in the given file (the corpus). */
 	public void train(String fileName) {
-		// Your code goes here
         String window = "";
         char chr;
-
         In in = new In(fileName);
-        for(int j = 0; j < windowLength(); j++) {
-                window += in.readChar();
+        for (int j = 0; j < windowLength; j++) {
+            window = window + in.readChar();
         }
-        while (!in.isEmpty()){
-            chr= in.readChar();
-
+        while (!(in.isEmpty())) {
+            chr = in.readChar();
             List probs = CharDataMap.get(window);
-            if (probs == null) {
+            if (probs == null){
                 probs = new List();
                 CharDataMap.put(window, probs);
             }
-            probabilities.update(chr);
+            probs.update(chr);
             window = window + chr;
             window = window.substring(1);
         }
-        for (List probabilities: CharDataMap.values()) {
-            calculateProbabilities(probabilities);
-        }
-    }
+        for (List probs : CharDataMap.values())
+            calculateProbabilities(probs);
+		// Your code goes here
+	}
 
     // Computes and sets the probabilities (p and cp fields) of all the
-    // characters in the given list. */
-    public void calculateProbs(List probs) {                
-        // Your code goes here
-        int charTotal = 0;
-        for(int j = 0; j < probs.getSize(); j++) {
-           CharData current = probs.get(j);
-           charTotal += current.count;
+	// characters in the given list. */
+	public void calculateProbabilities(List probs) {
+        int numOfChars = 0;
+		for (int j = 0; j < probs.getSize(); j++){
+            numOfChars = numOfChars + probs.get(j).count;
         }
+        CharData current = probs.get(0);
+        Double currentP = current.count / (double)numOfChars;
+        current.p = currentP;
+        current.cp = currentP;
 
-        double totalProbs = 0;
-        for(int j = 0; j < probs.getSize(); j++) {
-           CharData current = probs.get(j);
-           current.p += (double) current.count / charTotal;
-           totalProbs += current.p;
-           current.cp = totalProbs;
+        CharData previous = current;
+        CharData first = null;
+        for (int j = 1; j < probs.getSize(); j++) {
+            first = probs.get(i);
+            double p = first.count / (double)numOfChars;
+            first.p = p;
+            first.cp = prev.cp + p;
+            previous = first;
         }
-
-    }
+	}
 
     // Returns a random character from the given probabilities list.
-    public char getRandomChar(List probabilities) {
-        // Your code goes here
-    double r = randomGenerator.nextDouble();
-    ListIterator iterator = probs.ListIterator(0);
-    while (iterator.hasNext()) {
-         CharData current = iterator.next();
-         if (r <=current.cp) {
-            return current.char;
-         }
-    }
-    return probs.get(probs.getSize()- 1).char;
-
-    }
-
+	public char getRandomChar(List probs) {
+        double rnd = randomGenerator.nextDouble();
+        int listSize = probs.getSize();
+        for (int j = 0; j < listSize; j++) {
+            CharData currentCharData = probs.get(j);
+            if (currentCharData.cp > rnd) {
+                return  currentCharData.chr;
+            }
+        }
+        return probs.get(listSize - 1).chr;
+	}
+	
     /**
-     * Generates a random text, based on the probabilities that were learned during training. 
-     * @param initialText - text to start with. If initialText's last substring of size numberOfLetters
-     * doesn't appear as a key in Map, we generate no text and return only the initial text. 
-     * @param numberOfLetters - the size of text to generate
-     * @return the generated text
-     */
-    public String generate(String initialText, int textLength) {
-        // Your code goes here
+	 * Generates a random text, based on the probabilities that were learned during training. 
+	 * @param initialText - text to start with. If initialText's last substring of size numberOfLetters
+	 * doesn't appear as a key in Map, we generate no text and return only the initial text. 
+	 * @param numberOfLetters - the size of text to generate
+	 * @return the generated text
+	 */
+	public String generate(String initialText, int textLength) {
         if (initialText.length() < windowLength){
             return initialText;
         }
         String window = initialText.substring(initialText.length() - windowLength);
-        StringBuilder genText = new StringBuilder(window);
+        String genText = window;
         for (int j = 0; j < textLength; j++) {
             List probs = CharDataMap.get(window);
-            if(probs = null){
-               return genText.toString();
-            }
-            else {   
-                char chr = getRandomChar(probs);
-                genText.append(chr);
+            if(probs != null){
+                char newChr = getRandomChar(probs);
+                genText = genText + newChr;
                 window = genText.substring(genText.length() - windowLength);
-
+            }
+            else {
+                return genText;
             }
         }
-        return genText.toString();
-    }
+        return genText;
+	}
 
     /** Returns a string representing the map of this language model. */
-    public String toString() {
-        StringBuilder str = new StringBuilder();
-        for (String key : CharDataMap.keySet()) {
-            List keyProbs = CharDataMap.get(key);
-            str.append(key + " : " + keyProbs + "\n");
-        }
-        return str.toString();
-    }
+public String toString() {
+		StringBuilder str = new StringBuilder();
+		for (String key : CharDataMap.keySet()) {
+			List keyProbs = CharDataMap.get(key);
+			str.append(key + " : " + keyProbs + "\n");
+		}
+		return str.toString();
+	}
 
     public static void main(String[] args) {
-        // Your code goes here
+		// Your code goes here
     }
 }
