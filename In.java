@@ -101,7 +101,7 @@ public final class In {
             throw new IllegalArgumentException("Could not open " + socket, ioe);
         }
     }
-
+    
    /**
      * Initializes an input stream from a URL.
      *
