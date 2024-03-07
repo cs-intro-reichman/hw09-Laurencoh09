@@ -43,7 +43,7 @@ public class LanguageModel {
 
         while (!in.isEmpty()) {
             c = in.readChar();
-
+	}
             List probs = new List();
 
             if (CharDataMap.containsKey(window)) {
@@ -58,14 +58,11 @@ public class LanguageModel {
             window = window + c;
             window = window.substring(1);
 
-        }
-
         for (List probs : CharDataMap.values()){
                 calculateProbabilities(probs);
 	}
 
     // Computes and sets the probabilities (p and cp fields) of all the
-	// characters in the given list. */
 	public void calculateProbabilities(List probs) {				
 		ListIterator itr = probs.listIterator(0);int charCount = 0;
         
