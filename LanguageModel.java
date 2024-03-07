@@ -8,7 +8,7 @@ public class LanguageModel {
     HashMap<String, List> CharDataMap;
     
     // The window length used in this model.
-    int windowLength;
+    int windowsLength;
     
     // The random number generator used by this model. 
 	private Random randomGenerator;
@@ -35,22 +35,22 @@ public class LanguageModel {
 	public void train(String fileName) {
 		// Your code goes here
         String windows = "";
-        char c;
+        char chr;
 
         In in = new In(fileName);
         for(int j = 0; j < windowsLength(); j++) {
                 windows += in.readChar();
         }
         while (!in.isEmpty()){
-            c= in.readChar();
+            chr= in.readChar();
 
             List probabilities = CharDataMap.get(windows);
             if (probabilities == null) {
                 probabilities = new List();
                 CharDataMap.put(windows, probabilities);
             }
-            probabilities.update(c);
-            windows = windows + c;
+            probabilities.update(chr);
+            windows = windows + chr;
             windows = windows.substring(1);
         }
         for (List probabilities: CharDataMap.values()) {
@@ -113,8 +113,8 @@ public class LanguageModel {
                return genText.toString();
             }
             else {   
-                char c = getRandomChar(probabilities);
-                genText.append(c);
+                char chr = getRandomChar(probabilities);
+                genText.append(chr);
                 window = genText.substring(genText.length() - windowsLength);
 
             }
