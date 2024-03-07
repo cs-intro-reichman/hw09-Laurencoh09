@@ -60,10 +60,8 @@ public class LanguageModel {
 
         }
 
-        for (List probs : CharDataMap.values())
+        for (List probs : CharDataMap.values()){
                 calculateProbabilities(probs);
-
-        
 	}
 
     // Computes and sets the probabilities (p and cp fields) of all the
@@ -124,7 +122,7 @@ public class LanguageModel {
 	public String generate(String initialText, int textLength) {
 		if (initialText.length() < windowLength) {
             return initialText;
-        }
+                }
 
         String window = initialText.substring(initialText.length() - windowLength);
         String generatedText = initialText; 
