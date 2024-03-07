@@ -8,7 +8,7 @@ public class LanguageModel {
     HashMap<String, List> CharDataMap;
     
     // The window length used in this model.
-    int windowsLength;
+    int windowLength;
     
     // The random number generator used by this model. 
 	private Random randomGenerator;
@@ -16,8 +16,8 @@ public class LanguageModel {
     /** Constructs a language model with the given window length and a given
      *  seed value. Generating texts from this model multiple times with the 
      *  same seed value will produce the same random texts. Good for debugging. */
-    public LanguageModel(int windowsLength, int seed) {
-        this.windowsLength = windowsLength;
+    public LanguageModel(int windowLength, int seed) {
+        this.windowLength = windowLength;
         randomGenerator = new Random(seed);
         CharDataMap = new HashMap<String, List>();
     }
@@ -25,8 +25,8 @@ public class LanguageModel {
     /** Constructs a language model with the given window length.
      * Generating texts from this model multiple times will produce
      * different random texts. Good for production. */
-    public LanguageModel(int windowsLength) {
-        this.windowsLength = windowsLength;
+    public LanguageModel(int windowLength) {
+        this.windowLength = windowLength;
         randomGenerator = new Random();
         CharDataMap = new HashMap<String, List>();
     }
@@ -34,24 +34,24 @@ public class LanguageModel {
     /** Builds a language model from the text in the given file (the corpus). */
 	public void train(String fileName) {
 		// Your code goes here
-        String windows = "";
+        String window = "";
         char chr;
 
         In in = new In(fileName);
-        for(int j = 0; j < windowsLength(); j++) {
-                windows += in.readChar();
+        for(int j = 0; j < windowLength(); j++) {
+                window += in.readChar();
         }
         while (!in.isEmpty()){
             chr= in.readChar();
 
-            List probabilities = CharDataMap.get(windows);
+            List probabilities = CharDataMap.get(window);
             if (probabilities == null) {
                 probabilities = new List();
-                CharDataMap.put(windows, probabilities);
+                CharDataMap.put(window, probabilities);
             }
             probabilities.update(chr);
-            windows = windows + chr;
-            windows = windows.substring(1);
+            window = window + chr;
+            window = window.substring(1);
         }
         for (List probabilities: CharDataMap.values()) {
             calculateProbabilities(probabilities);
@@ -60,7 +60,7 @@ public class LanguageModel {
 
     // Computes and sets the probabilities (p and cp fields) of all the
     // characters in the given list. */
-    public void calculateProbabilities(List probs) {                
+    public void calculateProbabilities(List probabilities) {                
         // Your code goes here
         int charTotal = 0;
         for(int j = 0; j < probabilities.getSize(); j++) {
@@ -79,7 +79,7 @@ public class LanguageModel {
     }
 
     // Returns a random character from the given probabilities list.
-    public char getRandomChar(List probs) {
+    public char getRandomChar(List probabilities) {
         // Your code goes here
     double r = randomGenerator.nextDouble();
     ListIterator iterator = probabilities.ListIterator(0);
@@ -102,20 +102,20 @@ public class LanguageModel {
      */
     public String generate(String initialText, int textLength) {
         // Your code goes here
-        if (initialText.length() < windowsLength){
+        if (initialText.length() < windowLength){
             return initialText;
         }
-        String windows = initialText.substring(initialText.length() - windowsLength);
-        StringBuilder genText = new StringBuilder(windows);
+        String windows = initialText.substring(initialText.length() - windowLength);
+        StringBuilder genText = new StringBuilder(window);
         for (int j = 0; j < textLength; j++) {
-            List probabilities = CharDataMap.get(windows);
+            List probabilities = CharDataMap.get(window);
             if(probabilities = null){
                return genText.toString();
             }
             else {   
                 char chr = getRandomChar(probabilities);
                 genText.append(chr);
-                window = genText.substring(genText.length() - windowsLength);
+                window = genText.substring(genText.length() - windowLength);
 
             }
         }
