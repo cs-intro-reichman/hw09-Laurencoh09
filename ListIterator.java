@@ -3,7 +3,7 @@ public class ListIterator {
 
     // Current position in the list (cursor)
     Node current;
-
+    
     /** Constructs a list iterator, starting at the given node. */
     public ListIterator(Node node) {
         // Sets the cursor of this iterator to the given node
