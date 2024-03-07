@@ -82,10 +82,8 @@ public class LanguageModel {
                 return randomChar;
             }
         }
-        return 'a'; // if something unexpected happened.
+        return 'a'; 
     }
-
-
     /**
 	 * Generates a random text, based on the probabilities that were learned during training. 
 	 * @param initialText - text to start with. If initialText's last substring of size numberOfLetters
