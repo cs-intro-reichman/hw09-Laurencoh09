@@ -5,7 +5,7 @@ public class CharData {
 
 	// a character
 	char chr;
-
+	
 	// a counter
 	int count; 
 
