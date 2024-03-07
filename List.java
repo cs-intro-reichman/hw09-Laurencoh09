@@ -4,7 +4,7 @@
  *  the class represents a list of CharData objects. Likwise, the API of the class does not
  *  mention the existence of the Node objects). */
 public class List {
-
+	
     // Points to the first node in this list
     private Node first;
 
